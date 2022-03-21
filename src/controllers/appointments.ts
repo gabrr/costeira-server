@@ -19,7 +19,9 @@ class AppointmentController {
 				const isDateStringValid = date.getDate() || false
 				if (!isDateStringValid) throw Error('It should be a valid date string')
 
-				dateHelper(new Date()).isLastSunday()
+				const result = dateHelper(date).createMonth()
+
+				return res.json(result)
 
 			} catch (error: any) {
 				return res.status(400).json(error.message)

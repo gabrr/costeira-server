@@ -1,3 +1,5 @@
+import { IAppointment } from "_types/appointment"
+
 export const dateHelper = (dateParentParam: Date) => {
 	const year = new Date(dateParentParam).getFullYear()
 	const month = new Date(dateParentParam).getMonth()
@@ -7,9 +9,9 @@ export const dateHelper = (dateParentParam: Date) => {
 	 * @param date Dates are zero based
 	 * @returns
 	 */
-	const daysToWeekend = () => (6 - new Date(year, month).getDay()) === 6 ? 0 : (6 - new Date(year, month).getDay())
+	const getDaysToWeekend = () => (6 - new Date(year, month).getDay()) === 6 ? 0 : (6 - new Date(year, month).getDay())
 
-	const firstWeekendDate = () => new Date(year, month,  daysToWeekend() + 1).getDate()
+	const getFirstWeekendDate = () => new Date(year, month,  getDaysToWeekend() + 1).getDate()
 
 	/**
 	 * 
@@ -54,11 +56,101 @@ export const dateHelper = (dateParentParam: Date) => {
 		return (lastSunday.getDate() === date.getDate())
 	}
 
+	/**
+	 * 
+	 * @param year 
+	 * @param month
+	 * @returns Returns an Object in a format for the Appointments Schema.
+	 */
+	const createMonth = (_year = year, _month = month): IAppointment[] => {
+		//startDay 0 equals to sunday
+		//month as parameter for Date is 1 based.
+		const startDay = new Date(_year, _month, 1).getDay()
+		const endDate = new Date(_year, _month + 1, 0).getDate()
+		
+		//if the start day is saturday we want to start from saturday again, but not if it is sunday.
+		const daysToSum = startDay === 0 ? 6 : 7
+
+		const daysToWeek = getDaysToWeekend()
+		const firstWeekendDate = getFirstWeekendDate()
+
+		const result: IAppointment[] = []
+
+		type CreateEmptyAppointObjProps = {
+			datetime: Date
+			isFirstSunday?: boolean
+			isLastSunday?: boolean
+			list?: IAppointment[]
+		}
+		
+		type CreateEmptyAppointObj = (props: CreateEmptyAppointObjProps) => void
+
+		const createEmptyAppointObj: CreateEmptyAppointObj = ({
+			datetime,
+			isFirstSunday = false,
+			isLastSunday = false,
+			list = result
+		}) => {
+			
+			const suffix = (isFirstSunday || isLastSunday) ? 'Todos grupos juntos.' : ''
+			
+			const appoint = {
+				datetime: datetime.toLocaleDateString('pt', { dateStyle: "full" }),
+				suffix,
+				bro1: '',
+				bro2: '',
+			}
+			
+			list.push(appoint)
+	
+			return
+		}
+
+		const buildDates = (day: number) => {
+			if (day > endDate) return
+	
+			const newDate = (day: number) => (day === 0) ? new Date(_year, _month + 1, day) : new Date(_year, _month, day)
+	
+			// the first weekend. It can be saturday or sunday.
+			if (day === firstWeekendDate) {
+				createEmptyAppointObj({ datetime: newDate(day), isFirstSunday: isASunday(day) })
+				//if it's saturday, let's add sunday too.
+				if (isASunday(day + 1)) {
+					console.log({ datetime: newDate(day + 1), isFirstSunday: isASunday(day) })
+					createEmptyAppointObj({ datetime: newDate(day + 1), isFirstSunday: true })
+				}
+				buildDates(day + daysToSum)
+				return
+			}
+	
+			// all the following weekends.
+			createEmptyAppointObj({
+				datetime: newDate(day),
+				isLastSunday: isLastSunday(newDate(day))
+			})
+			
+			
+			// If we add one more weekend day and is still part of the same month — GOOD.
+			if ((day + 1) < endDate) createEmptyAppointObj({
+				datetime: newDate(day + 1),
+				isLastSunday: isLastSunday(newDate(day + 1))
+			})
+	
+			buildDates(day + 7)
+			return
+		}
+
+		buildDates(firstWeekendDate)
+
+		return result
+	}
+
 	return {
-		firstWeekendDate,
-		daysToWeekend,
+		getFirstWeekendDate,
+		getDaysToWeekend,
 		isASunday,
 		isLastSunday,
 		findLastSunday,
+		createMonth,
 	}
 }
