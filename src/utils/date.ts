@@ -70,8 +70,6 @@ export const dateHelper = (dateParentParam: Date) => {
 		
 		//if the start day is saturday we want to start from saturday again, but not if it is sunday.
 		const daysToSum = startDay === 0 ? 6 : 7
-
-		const daysToWeek = getDaysToWeekend()
 		const firstWeekendDate = getFirstWeekendDate()
 
 		const result: IAppointment[] = []
@@ -95,7 +93,8 @@ export const dateHelper = (dateParentParam: Date) => {
 			const suffix = (isFirstSunday || isLastSunday) ? 'Todos grupos juntos.' : ''
 			
 			const appoint = {
-				datetime: datetime.toLocaleDateString('pt', { dateStyle: "full" }),
+				dateGroup: datetime.toLocaleDateString('pt', { month: '2-digit', year: 'numeric' }),
+				datetime: datetime.toLocaleDateString('pt', { dateStyle: 'full' }),
 				suffix,
 				bro1: '',
 				bro2: '',
@@ -116,7 +115,6 @@ export const dateHelper = (dateParentParam: Date) => {
 				createEmptyAppointObj({ datetime: newDate(day), isFirstSunday: isASunday(day) })
 				//if it's saturday, let's add sunday too.
 				if (isASunday(day + 1)) {
-					console.log({ datetime: newDate(day + 1), isFirstSunday: isASunday(day) })
 					createEmptyAppointObj({ datetime: newDate(day + 1), isFirstSunday: true })
 				}
 				buildDates(day + daysToSum)
@@ -144,6 +142,15 @@ export const dateHelper = (dateParentParam: Date) => {
 
 		return result
 	}
+	
+	const isDateEqual = (dateOne: string, dateTwo: string): boolean => {
+		const _dateOne = new Date(dateOne)
+		const _dateTwo = new Date(dateTwo)
+		
+		if (!_dateOne.getDate() || !_dateTwo.getDate()) return false
+		
+		return _dateOne.toDateString() === _dateTwo.toDateString()
+	}
 
 	return {
 		getFirstWeekendDate,
@@ -152,5 +159,6 @@ export const dateHelper = (dateParentParam: Date) => {
 		isLastSunday,
 		findLastSunday,
 		createMonth,
+		isDateEqual,
 	}
 }

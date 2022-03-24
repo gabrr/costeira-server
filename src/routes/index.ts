@@ -8,7 +8,8 @@ const routes = express.Router()
 
 // Appointments
 routes.get('/api/v1/appointments', appointmentsController.index)
-routes.post('/api/v1/appointments/create-month', appointmentsController.createMonth)
+routes.get('/api/v1/appointments/year/:year/month/:month', appointmentsController.getByMonth)
+routes.post('/api/v1/appointments/get-month-object', appointmentsController.getMonthObject)
 
 // Brothers
 routes.get('/api/v1/brothers', brothersController.index)
