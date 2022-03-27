@@ -1,6 +1,10 @@
 import mongoose from "mongoose"
 
 const appointmentSchema = new mongoose.Schema({
+	group: {
+		type: String,
+		required: true,
+	},
 	dateGroup: {
 		type: String,
 		required: true,

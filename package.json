@@ -7,6 +7,9 @@
  "author": "gabrr",
  "license": "MIT",
  "private": false,
+ "engines": {
+	"node": "14.17.6"
+},
  "scripts": {
   "build": "rimraf ./build && tsc",
   "start": "yarn build && ts-node -r tsconfig-paths/register build/server.js",

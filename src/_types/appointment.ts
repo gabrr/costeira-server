@@ -1,4 +1,5 @@
 export interface IAppointment {
+	group: string
 	dateGroup: string
 	datetime: string
 	suffix: string

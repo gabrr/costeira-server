@@ -94,13 +94,16 @@ export const dateHelper = (dateParentParam: Date) => {
 			
 			const appoint = {
 				dateGroup: datetime.toLocaleDateString('pt', { month: '2-digit', year: 'numeric' }),
-				datetime: datetime.toLocaleDateString('pt', { dateStyle: 'full' }),
+				datetime: datetime.toISOString(),
 				suffix,
 				bro1: '',
 				bro2: '',
 			}
+
+			const appointA = {...appoint, group: 'A'}
+			const appointB = {...appoint, group: 'B'}
 			
-			list.push(appoint)
+			list.push(appointA, appointB)
 	
 			return
 		}
