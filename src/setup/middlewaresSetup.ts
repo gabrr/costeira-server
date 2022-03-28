@@ -11,7 +11,7 @@ import express from 'express'
 
 export default (server: Express) => {
     server.use(express.json())
-    server.use(cors({ origin: CLIENT_URL, credentials: true,  }))
+    server.use(cors({ origin: '*', credentials: true,  }))
 		server.use('/static', express.static(path.join(__dirname, '.', '..', 'uploads')))
     //server.use(cookieParser())
 }
