@@ -13,7 +13,9 @@ const appointmentSchema = new mongoose.Schema({
 		type: String,
 		required: true,
 	},
-
+	suffix: {
+		type: String
+	},
 	bro1: {
 		type: String,
 	},
