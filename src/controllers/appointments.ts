@@ -51,12 +51,14 @@ class AppointmentController {
 
 	async setAppointment(req: Request, res: Response ) {
 		try {
-			const { appointmentId, group } = req.params
-			const { bro1, bro2 } = req.body
+			const { appointmentId } = req.params
+			const { bro1, bro2, suffix } = req.body
 
 			if (!!!appointmentId || typeof appointmentId !== 'string') return res.json('Appointment ID must be provided.')
+
+			const result = await Appointments.findOneAndUpdate({ _id: appointmentId }, { bro1, bro2, suffix }, { new: true })
 			
-			const result = await Appointments.findOneAndUpdate({ _id: appointmentId, group }, { bro1, bro2 }, { new: true })
+			if (!result) return res.json('Appointment not found.')
 
 			return res.json(result)
 
