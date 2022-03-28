@@ -37,7 +37,7 @@ class AppointmentController {
 			if (!isDateStringValid) throw Error('It should be a valid date string')
 
 			const search = await Appointments
-				.findOne({ datetime: new Date(date).toISOString() })
+				.findOne({ dateGroup: new Date(date).toLocaleDateString('pt', { month: '2-digit', year: 'numeric' }) })
 
 			if (search) return res.json("Months have been already created.")
 
