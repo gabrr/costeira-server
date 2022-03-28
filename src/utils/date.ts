@@ -94,7 +94,7 @@ export const dateHelper = (dateParentParam: Date) => {
 			
 			const appoint = {
 				dateGroup: datetime.toLocaleDateString('pt', { month: '2-digit', year: 'numeric' }),
-				datetime: datetime.toISOString(),
+				datetime: datetime.toDateString(),
 				suffix,
 				bro1: '',
 				bro2: '',
