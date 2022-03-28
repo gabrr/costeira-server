@@ -16,7 +16,7 @@ const corsOptions = {
 
 export default (server: Express) => {
     server.use(express.json())
-    server.use(cors(corsOptions))
+    server.use(cors())
 		server.use('/static', express.static(path.join(__dirname, '.', '..', 'uploads')))
     //server.use(cookieParser())
 }
